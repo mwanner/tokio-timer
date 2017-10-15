@@ -204,7 +204,8 @@ impl Future for Sleep {
                 // An wakeup request has not yet been sent to the timer. Before
                 // doing so, check to ensure that the requested duration does
                 // not exceed the `max_timeout` duration
-                if (self.when - Instant::now()) > *self.timer.worker.max_timeout() {
+                let now = Instant::now();
+                if self.when > now && (self.when - now) > *self.timer.worker.max_timeout() {
                     return Err(TimerError::TooLong);
                 }
 
